@@ -1,0 +1,17 @@
+{
+	"template": "http://www.example.com/template-2.json",
+	"feeds": [
+		{
+			"name": "category_1_items",
+			"link": "http://www.example-2.com/category/category-1?feed=xtxml"
+		},
+		{
+			"name": "category_2_items",
+			"link": "http://www.example-2.com/category/category-2?feed=xtxml"
+		},
+		{
+			"name": "category_3_items",
+			"link": "http://www.example-2.com/category/category-3?feed=xtxml"
+		}
+	]
+}

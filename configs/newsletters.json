@@ -1,0 +1,10 @@
+[
+	{
+		"name": "example 1",
+		"config": "http://www.example.com/config-1.json"
+	},
+	{
+		"name": "example 2",
+		"config": "http://www.example.com/config-2.json"
+	}
+]

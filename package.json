@@ -1,0 +1,17 @@
+{
+  "name": "xml-to-rss-newsletters",
+  "version": "1.0.0",
+  "description": "Newsletter compilation from XML RSS feeds, and delivery through web facing client.",
+  "main": "app.js",
+  "dependencies": {
+    "ejs": "^2.5.6",
+    "express": "^4.15.3",
+    "xml-to-json-promise": "0.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joe Gaspar",
+  "license": "ISC"
+}

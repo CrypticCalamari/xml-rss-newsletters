@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>Newsletters</title>
+		<style>
+			pre {
+				tab-size: 2;
+			}
+			#visual-display-panel, #html-panel {
+				top: 70px;
+				position: absolute;
+				transition: all 1s ease-in-out;
+				z-index: 0;
+			}
+			#control-panel {
+				display: flex;
+				flex-flow: column;
+				align-items: center;
+				justify-content: center;
+				position: absolute;
+				width: 99%;
+				font-size: 1.4em;
+				z-index: 1;
+			}
+			#error-panel {
+				display: none;
+				position: fixed;
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0,0,0,0.5);
+			}
+		</style>
+	</head>
+	<body>
+		<div id="control-panel">
+			<div id="title-bar"></div>
+			<select id="newsletter-select">
+				<option value="-1">Select a Newsletter</option>
+				<% for (let item of items) { %>
+				<option value="<%= item %>"><%= item %></option>
+				<% } %>
+			</select>
+			<div>
+				<button id="reload-button">Reload</button>
+				<button id="toggle-button">Toggle Display</button>
+			</div>
+		</div>
+		<div id="container">
+			<div id="visual-display-panel"></div>
+			<pre id="html-panel"><code id="html-display-panel" class="html hljs agate"></code></pre>
+		</div>
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/agate.min.css">
+		<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+		<script>
+			let newsletter_select = document.getElementById ("newsletter-select");
+			let html_display      = document.getElementById ("html-display-panel");
+			let visual_display    = document.getElementById ("visual-display-panel");
+			let html_panel        = document.getElementById ("html-panel");
+			let reload_button     = document.getElementById ("reload-button");
+			let toggle_button     = document.getElementById ("toggle-button");
+			let newsletters = "/newsletters/";
+			let display_toggled = false;
+
+			visual_display.style.opacity = "100";
+			html_panel.style.opacity = "0";
+
+			newsletter_select.addEventListener ("change", (e) => {
+				if (newsletter_select.value !== "-1") {
+					load_newsletter (newsletter_select.value);
+				}
+			}, false);
+			reload_button.addEventListener ("click", (e) => {
+				if (newsletter_select.value !== "-1") {
+					load_newsletter (newsletter_select.value);
+				}
+			}, false);
+			toggle_button.addEventListener ("click", (e) => {
+				if (display_toggled) {
+					visual_display.style.opacity = "100";
+					html_panel.style.opacity = "0";
+				}
+				else {
+					visual_display.style.opacity = "0";
+					html_panel.style.opacity = "100";
+				}
+				display_toggled = !display_toggled;
+			}, false);
+
+			function load_newsletter (newsletter) {
+				let headers = new Headers ();
+				let init = {
+					method: "GET",
+					headers: headers,
+					mode: "cors",
+					cache: "no-store"
+				};
+				let request = new Request (newsletters + newsletter, init);
+
+				fetch (request)
+				.then (function (response) {
+					return response.text ();
+				})
+				.then (function (text) {
+					let _text = JSON.parse (text);
+					html_display.textContent = _text.content;
+					
+					hljs.configure ({style: "agate"});
+					hljs.highlightBlock (html_display);
+					
+					while (visual_display.hasChildNodes ()) {
+						visual_display.removeChild (visual_display.lastChild);
+					}
+					
+					visual_display.innerHTML = _text.content;
+				});
+			}
+		</script>
+	</body>
+</html>
